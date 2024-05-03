@@ -3,9 +3,6 @@
 <head>
   <title>Speeding Tickets</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-  <script src="https://unpkg.com/vue@next"></script>
 </head>
 <body>
   <div class="container">
@@ -22,52 +19,61 @@
     </nav>  
 
     <div id="ticketApp">
-      <h2>All Tickets</h2>
+      <h2>Tickets July 4, 2014, Minneapolis/St. Paul</h2>
       <table class="table table-bordered table-striped">
-        <tr>
-          <th>Ticket ID</th>
-          <th>Time</th>
-          <th>Posted Speed</th>
-          <th>MPH Over</th>
-          <th>Violator Sex</th>
-        </tr>
-        <tr v-for="ticket in tickets">
-          <td>{{ ticket.tid }}</td>
-          <td>{{ ticket.stop_time }}</td>
-          <td>{{ ticket.posted_speed }}</td>
-          <td>{{ ticket.actual_speed - ticket.posted_speed }}</td>
-          <td>{{ ticket.violator_sex }}</td>
-        </tr>
+        <thead>
+          <tr>
+            <th>Ticket ID</th>
+            <th>Time</th>
+            <th>Posted Speed</th>
+            <th>MPH Over</th>
+            <th>Violator Sex</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="ticket in tickets">
+            <td>{{ ticket.tid }}</td>
+            <td>{{ ticket.stop_time }}</td>
+            <td>{{ ticket.posted_speed }}</td>
+            <td>{{ ticket.actual_speed - ticket.posted_speed }}</td>
+            <td>{{ ticket.violator_sex }}</td>
+          </tr>
+        </tbody>
       </table>
     </div>
   </div>
 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script src="https://unpkg.com/vue@next"></script>
   <script>
-    let app = Vue.createApp({
-      data() {
-        return {
-          tickets: [], // Array to hold ticket data
-        }
-      },
-      created() {
-        this.getData(); // Load JSON data when the page loads
-      },
-      methods: {
-        async getData() {
-          try {
-            const response = await fetch('tickets1.json'); // Fetch JSON data
-            if (!response.ok) {
-              throw new Error('Failed to fetch data');
-            }
-            this.tickets = await response.json(); // Set tickets data
-          } catch (error) {
-            console.error(error);
+    document.addEventListener('DOMContentLoaded', function () {
+      let app = Vue.createApp({
+        data() {
+          return {
+            tickets: [], // Array to hold ticket data
           }
         },
-      }
-    });
+        created() {
+          this.getData(); // Load JSON data when the page loads
+        },
+        methods: {
+          async getData() {
+            try {
+              const response = await fetch('tickets1.json'); // Fetch JSON data
+              if (!response.ok) {
+                throw new Error('Failed to fetch data');
+              }
+              this.tickets = await response.json(); // Set tickets data
+            } catch (error) {
+              console.error(error);
+            }
+          },
+        }
+      });
 
-    app.mount('#ticketApp'); // Mount the Vue app
+      app.mount('#ticketApp'); // Mount the Vue app
+    });
   </script>
 </body>
 </html>
