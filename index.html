@@ -3,14 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Traffic Tickets</title>
+  <title>Traffic Tickets - 25mph or More Over</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 </head>
 <body>
-  <div class="container" id="ticketApp">
-    <h2>Traffic Tickets</h2>
-    <table class="table table-bordered table-striped">
-      <thead>
+  <nav class="navbar navbar-inverse">
+    <div class="container">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">Traffic Tickets</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li><a href="index.html">All Tickets</a></li>
+        <li class="active"><a href="25over.html">25mph or More Over</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h2>Traffic Tickets - 25mph or More Over</h2>
+    <div id="ticketApp">
+      <table class="table table-bordered table-striped">
         <tr>
           <th>Ticket ID</th>
           <th>Time</th>
@@ -18,8 +30,6 @@
           <th>MPH Over</th>
           <th>Violator Sex</th>
         </tr>
-      </thead>
-      <tbody>
         <tr v-for="ticket in tickets">
           <td>{{ ticket.tid }}</td>
           <td>{{ ticket.stop_time }}</td>
@@ -27,23 +37,24 @@
           <td>{{ ticket.actual_speed - ticket.posted_speed }}</td>
           <td>{{ ticket.violator_sex }}</td>
         </tr>
-      </tbody>
-    </table>
+      </table>
+    </div>
   </div>
 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
   <script>
     new Vue({
       el: '#ticketApp',
       data: {
-        tickets: [] // This will hold the fetched data
+        tickets: []
       },
       created() {
         fetch('tickets1.json')
           .then(response => response.json())
           .then(data => {
-            // Assign the fetched data to the tickets array
-            this.tickets = data;
+            this.tickets = data.filter(ticket => ticket.actual_speed - ticket.posted_speed >= 25);
           })
           .catch(error => console.error('Error fetching data:', error));
       }
