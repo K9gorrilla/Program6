@@ -42,6 +42,7 @@
         fetch('tickets1.json')
           .then(response => response.json())
           .then(data => {
+            console.log(data); // Check if data is retrieved correctly
             this.tickets = data;
           })
           .catch(error => console.error('Error fetching data:', error));
