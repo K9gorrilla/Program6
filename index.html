@@ -20,19 +20,34 @@
         </tr>
       </thead>
       <tbody>
-        <!-- Vue.js will populate this tbody -->
+        <tr v-for="ticket in tickets">
+          <td>{{ ticket.tid }}</td>
+          <td>{{ ticket.stop_time }}</td>
+          <td>{{ ticket.posted_speed }}</td>
+          <td>{{ ticket.actual_speed - ticket.posted_speed }}</td>
+          <td>{{ ticket.violator_sex }}</td>
+        </tr>
       </tbody>
     </table>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
   <script>
-    fetch('tickets1.json')
-      .then(response => response.json())
-      .then(data => {
-        console.log(data); // Output fetched data to console
-      })
-      .catch(error => console.error('Error fetching data:', error));
+    new Vue({
+      el: '#ticketApp',
+      data: {
+        tickets: [] // This will hold the fetched data
+      },
+      created() {
+        fetch('tickets1.json')
+          .then(response => response.json())
+          .then(data => {
+            // Assign the fetched data to the tickets array
+            this.tickets = data;
+          })
+          .catch(error => console.error('Error fetching data:', error));
+      }
+    });
   </script>
 </body>
 </html>
