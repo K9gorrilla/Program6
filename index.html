@@ -1,26 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Test Fetch JSON</title>
+  <title>Speeding Tickets</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 </head>
 <body>
-  <script>
-    async function fetchJsonData() {
-      try {
-        const response = await fetch('tickets1.json');
-        if (!response.ok) {
-          throw new Error('Failed to fetch JSON');
-        }
-        const jsonData = await response.json();
-        console.log('JSON data:', jsonData);
-      } catch (error) {
-        console.error('Error fetching JSON:', error.message);
-      }
-    }
+  <div class="container">
+    <h2>Tickets July 4, 2014, Minneapolis/St. Paul</h2>
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>Ticket ID</th>
+          <th>Time</th>
+          <th>Posted Speed</th>
+          <th>MPH Over</th>
+          <th>Violator Sex</th>
+        </tr>
+      </thead>
+      <tbody id="ticketTableBody">
+        <!-- Ticket data will be inserted here -->
+      </tbody>
+    </table>
+  </div>
 
-    fetchJsonData();
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async function () {
+      try {
+        const response = await fetch('tickets1.json'); // Fetch JSON data
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        const tickets = await response.json(); // Parse JSON data
+        displayTickets(tickets); // Display tickets in the table
+      } catch (error) {
+        console.error(error);
+      }
+    });
+
+    function displayTickets(tickets) {
+      const tableBody = document.getElementById('ticketTableBody');
+      tickets.forEach(ticket => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${ticket.tid}</td>
+          <td>${ticket.stop_time}</td>
+          <td>${ticket.posted_speed}</td>
+          <td>${ticket.actual_speed - ticket.posted_speed}</td>
+          <td>${ticket.violator_sex}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
   </script>
 </body>
 </html>
