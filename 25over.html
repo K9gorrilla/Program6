@@ -1,64 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Traffic Tickets - 25mph or More Over</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>25 Over</title>
 </head>
 <body>
-  <nav class="navbar navbar-inverse">
-    <div class="container">
-      <div class="navbar-header">
-        <a class="navbar-brand" href="#">Traffic Tickets</a>
-      </div>
-      <ul class="nav navbar-nav">
-        <li><a href="index.html">All Tickets</a></li>
-        <li class="active"><a href="25over.html">25mph or More Over</a></li>
-      </ul>
-    </div>
-  </nav>
+    <h1>25 MPH Over Tickets</h1>
+    <ul id="over25List"></ul>
 
-  <div class="container">
-    <h2>Traffic Tickets - 25mph or More Over</h2>
-    <div id="ticketApp">
-      <table class="table table-bordered table-striped">
-        <tr>
-          <th>Ticket ID</th>
-          <th>Time</th>
-          <th>Posted Speed</th>
-          <th>MPH Over</th>
-          <th>Violator Sex</th>
-        </tr>
-        <tr v-for="ticket in tickets">
-          <td>{{ ticket.tid }}</td>
-          <td>{{ ticket.stop_time }}</td>
-          <td>{{ ticket.posted_speed }}</td>
-          <td>{{ ticket.actual_speed - ticket.posted_speed }}</td>
-          <td>{{ ticket.violator_sex }}</td>
-        </tr>
-      </table>
-    </div>
-  </div>
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
-  <script>
-    new Vue({
-      el: '#ticketApp',
-      data: {
-        tickets: []
-      },
-      created() {
-        fetch('tickets1.json')
-          .then(response => response.json())
-          .then(data => {
-            this.tickets = data.filter(ticket => ticket.actual_speed - ticket.posted_speed >= 25);
-          })
-          .catch(error => console.error('Error fetching data:', error));
-      }
-    });
-  </script>
+    <script>
+        fetch('data.json')
+            .then(response => response.json())
+            .then(data => {
+                const over25List = document.getElementById('over25List');
+                over25List.innerHTML = '';
+                data.forEach(ticket => {
+                    const mphOver = ticket.actual_speed - ticket.posted_speed;
+                    if (mphOver >= 25) {
+                        const li = document.createElement('li');
+                        li.textContent = `Ticket ID: ${ticket.tid}, MPH Over: ${mphOver}`;
+                        over25List.appendChild(li);
+                    }
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    </script>
 </body>
 </html>
